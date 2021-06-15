@@ -1,0 +1,126 @@
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/*para el header*/
+.header {
+  width: 100%;
+  height: 100px;
+  background: #115571;
+  align-content: center;
+  text-align: center;
+}
+
+.header .logo {
+  width: 300px;
+  height: 68px;
+  margin-top: 10px;
+}
+
+@media (max-width: 400px){
+  .header, .logo {
+    max-height: 75px;
+  }
+}
+/*finaliza header*/
+
+/*Para la barra de navegación*/
+#bs-example-navbar-collapse-1 a {
+  color: #FFFFFF;
+  border-radius: 5px;
+  padding: 5px 16px;
+}
+
+#bs-example-navbar-collapse-1 a:hover{
+  background: #FFFFFF;
+  color: #31AFB4;
+}
+
+#mainNav {
+  background:#115571;
+}
+
+#mainNav a {
+  color: #FFFFFF;
+  border-radius: 10px;
+  padding: 10px 16px;
+}
+
+table{
+  width:90%;
+}
+
+#mainNav a:hover {
+  background: #FFFFFF;
+  color:#31AFB4;
+}
+
+#mainNav #sesion {
+  text-decoration: none;
+  font-size: 20px;
+}
+/*finaliza navbar*/
+
+/*titulo y texto del index*/
+.titulo{
+ font-size: 40px;
+ text-align: center;
+ margin-top: 30px;
+ color: #115571;
+}
+.texto{
+  font-size: 20px;
+  margin-left:30px;
+  color:#31AFB4;
+}
+/*finaliza titulo*/
+
+/*Caja del indice principal*/
+.presentacion{
+   padding-left: 20%;
+   padding-right: 20%;
+}
+
+/*Informacion que se presenta en el indice principal*/
+.informacion{
+   font-size : 25px;
+   padding-left: 20%;
+}
+.textoinfo{
+  padding-left: 10%;
+}
+
+/*Ubicacion del logo*/
+.logo{
+  padding-top: 15%;
+  margin-top:40%;
+  margin-right:35%;
+  width: 351px;
+  height:136px;
+}
+/*Estilo para las tablas*/
+.tabla{
+  padding-top: 5%;
+  padding-bottom: 10%;
+}
+/*Contenedor de las graficas*/
+.cajaGraficas{
+  margin-top:5%;
+}
+
+footer {
+  width: 100%;
+  /*height: 100px;*/
+  background:#31AFB4;
+  text-align: center;
+  padding-top: 20px;
+  color: rgb(10, 13, 54);
+  position: absolute;
+}
+
+footer a{
+  color: white;
+}

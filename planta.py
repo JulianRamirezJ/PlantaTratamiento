@@ -4,12 +4,13 @@
 # - PyMySQL: pip install pymsql
 # - ReportLab: pip install reportlab
 # - Libreria para comunicarse con IoT: pip install requests
+#Antes de ejecutar el programa debe encender los modulos apache y mysql en su serviod
 import time
 import random
 import time
 import pymysql # pip install PyMySQL
 import datetime
-from datetime import date, time, datetime
+from datetime import datetime
 import generarInforme
 import enviarDatosIoT
 
@@ -38,11 +39,14 @@ def main():
     max_turbidez = 0
     mid_turbidez = 0
     modoLimite = False
+
+    mes = 1
+    dia = 1
     for i in range(1,16,1):#Ciclo de los dias(15 dias)
-        mes = int(time.strftime("%m"))
-        dia = int(time.strftime("%d"))
-        #horas = 0
-        #minutos = 0
+        #mes = int(time.strftime("%m"))
+        #dia = int(time.strftime("%d"))
+        #mes = 1
+        #dia = 1
         coagulante_diario = 0
         floculante_diario = 0
         cloro_diario = 0
@@ -82,7 +86,7 @@ def main():
                         cloro -= cloro_litro * 60
                         coagulante_diario += coagulante_litro * 60
                         floculante_diario += floculante_litro * 60
-                        cloro_diario -= cloro_litro * 60
+                        cloro_diario += cloro_litro * 60
                     
                 if (k % 10) == 0 or k==0:#Se cambia el valor de la turbidez cada 10 minutos
                     turbidez = random.randint(250,800)
@@ -99,7 +103,7 @@ def main():
                 t = str(dia)+'-'+str(mes)+'-'+str(2021)+' '+str(j)+':'+str(k)+':'+str(0)
                 tiempo = datetime.strptime(t, '%d-%m-%Y %H:%M:%S')
                 insertarDatosBD(nivelTanque,turbidez,cloro,coagulante,floculante,tiempo)
-                time.sleep(0.3)#Pasa un minuto
+                time.sleep(0.3)#Pasa un minuto#
             
             cargarDatosIoT(mid_tanque_hora/60,mid_turbidez_hora/60,cloro,coagulante,floculante)
 
@@ -171,7 +175,17 @@ def insertarDatosBD(nivelTanque, turbidez,cloro,coagulante,floculante,tiempo):
 	
     except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
 	    print("Ocurrió un error al conectar: ", e)
-        
+
 
 if __name__ == "__main__":
-    main()
+    try:
+	    conexion = pymysql.connect(host='localhost',user='root',password='')
+	    with conexion.cursor() as cursor:
+		    cursor.execute('CREATE DATABASE IF NOT EXISTS planta;')
+		    cursor.execute('USE planta;')
+		    cursor.execute('CREATE TABLE IF NOT EXISTS sensores(id_registro datetime PRIMARY KEY,nivelAgua double NOT NULL,turbidez INT NOT NULL,coagulante double NOT NULL,floculante double NOT NULL,cloro double NOT NULL);')
+		    cursor.execute('CREATE TABLE IF NOT EXISTS reporteDiario(dia DATE PRIMARY KEY,cloro_gastado DOUBLE NOT NULL,coagulante_gastado DOUBLE NOT NULL,floculante_gastado DOUBLE NOT NULL,mid_tanque DOUBLE NOT NULL,max_tanque DOUBLE NOT NULL,min_tanque DOUBLE NOT NULL,mid_turbidez DOUBLE NOT NULL,max_turbidez DOUBLE NOT NULL,min_turbidez DOUBLE NOT NULL,cloro_bajaCantidad BOOLEAN NOT NULL,coagulante_bajaCantidad BOOLEAN NOT NULL,floculante_bajaCantidad BOOLEAN NOT NULL);')
+		    main()
+    except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+	    print("Ocurrió un error al conectar: ", e)
+        

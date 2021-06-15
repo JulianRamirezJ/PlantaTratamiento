@@ -1,6 +1,7 @@
 import pymysql
 from pymysql.cursors import DictCursor
 from reportlab.lib import styles
+import math
 #Librerias reportlab a usar:
 from reportlab.platypus import (SimpleDocTemplate, PageBreak, Image, Spacer,
 Paragraph, Table, TableStyle)
@@ -51,7 +52,7 @@ def costo(lista,i,j):
     if lista[i][j] == '-':
         return '-'
     else:
-        return '$'+str(lista[i][j]*10000)
+        return '$'+str(round(lista[i][j]*10000,2))
 
 def disponibilidad(lista,i,j):
     if lista[i][j] == 1:
@@ -74,11 +75,11 @@ def generarDocumento():
     t=Table(
         data=[
             ['','','Actual:'+str(lista[0][0]), lista[1][0], lista[2][0], lista[3][0]],
-            ['\nCoagulante', 'Gasto', str(lista[0][2])+'kg', str(lista[1][2])+'kg', str(lista[2][2])+'kg',str(lista[3][2])+'kg'],
+            ['\nCoagulante', 'Gasto', str(round(lista[0][2],2))+'kg', str(round(lista[1][2],2))+'kg', str(round(lista[2][2],2))+'kg',str(round(lista[3][2],2))+'kg'],
             ['', 'Costo', costo(lista,0,2), costo(lista,1,2), costo(lista,2,2),costo(lista,3,2)],
-            ['\nFloculante', 'Gasto', str(lista[0][3])+'kg', str(lista[1][3])+'kg', str(lista[2][3])+'kg',str(lista[3][3])+'kg'],
+            ['\nFloculante', 'Gasto', str(round(lista[0][3],2))+'kg', str(round(lista[1][3],2))+'kg', str(round(lista[2][3],2))+'kg', str(round(lista[3][3],2))+'kg'],
             ['', 'Costo', costo(lista,0,3), costo(lista,1,3), costo(lista,2,3),costo(lista,3,3)],
-            ['\nCloro', 'Gasto', str(lista[0][1])+'L', str(lista[1][1])+'L', str(lista[2][1])+'L',str(lista[3][1])+'L'],
+            ['\nCloro', 'Gasto', str(round(lista[0][1],2))+'L', str(round(lista[1][1],2))+'L', str(round(lista[2][1],2))+'L',str(round(lista[3][1],2))+'L'],
             ['', 'Costo', costo(lista,0,1), costo(lista,1,1), costo(lista,2,1),costo(lista,3,1)],
         ],
         style=[
@@ -113,7 +114,7 @@ def generarDocumento():
     story.append(Spacer(0, 40))
 
     texto3 = Paragraph('''Niveles de turbidez:''')
-    story.append(texto2)
+    story.append(texto3)
     story.append(Spacer(0, 10))
     t3=Table(
         data=[
@@ -127,6 +128,10 @@ def generarDocumento():
          ('BACKGROUND',(0,0),(6,0),colors.grey),
         ])
     story.append(t3)
+    if lista[0][8] > 780:
+            story.append(Spacer(0, 5))
+            texto6 = Paragraph('''Alerta: Niveles superiores a 780 NTU''')
+            story.append(texto6)
 
     story.append(Spacer(0, 40))
 
@@ -145,13 +150,7 @@ def generarDocumento():
             ('BACKGROUND',(0,0),(6,0),colors.grey),
         ])
     story.append(t4)
+
+
     doc.build(story)
-
-
-if __name__ == "__main__":
-    generarDocumento()
-    """ lista = obtenerLista()
-    for v1 in lista:
-        for v2 in v1:
-            print(v2)"""
 
